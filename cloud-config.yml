@@ -1,7 +1,3 @@
+#cloud-config
 ssh_authorized_keys:
   - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDq7xGmgnN+0B1euTNQR349FldbZiJVTzpQjaCXTGVt/KXFsnr80zg5W15bTU1HF3Nm/udKdw49kVaMtaBCiyhRM8cGbr2LFJmxwJRSN7xNcntoMl8T1UwucQZrJvVHI3p8xHTTzsQtY6f30iULIkG2GCvHaTy/sRbHnczBtlbuUF/2f9mWvaKIkhrtMlc+1RvaHwiPL3Njtxq7F06YpkFP7EkDLdWm10V9Zdxj+i+TuPK2p3Al1ZFW/Ztw4/aQPSCscyfg8fSTZWxKv9vqkv2Y9GwYn3S9rz0q0yds8ZKDxQcjBL9QjYmoDcoMoihTuebngUcYPEIAKIG0XT7eKbhHEHWP/fqwdzDQcBUo8t4InIawokaN0mKY7c6xpCg9/fFqZn+U9yvaFH9Bw/q8uJl7yKp/X5O2aV5Bk8avJPjEbhv78p7jxfvCTDAAn3QYRX1hsfbMEMrXZeHdis6uXwqV6BLtLHtASXlu/6kJdAuYIHWyZVhBqc2Mayf/ByakqlVEWu0yD/guzz7Xkm1nnmNK2GlqSSK5/L7xG9es4Sd9HMEgfSv+DO+4WOkVvNLKLrb7B9SnMX4P9bJR6H9krB12/yeb0yEPJ/XuLYSCT96GnJLIjYY1p1gJZQl+5N3MRbsP1DbiSGS/aD4FhPOtTQ3URPJHbLPWIvVmqshOR7WCuQ== JuiceSSH
-
-rancher:
-  upgrade:
-    url: https://releases.rancher.com/os/releases.yml
-      image: rancher/os
