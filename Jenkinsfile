@@ -13,7 +13,9 @@ node {
         archive "maestro.jar"
     }
 
-    stash name: 'binary', includes: "maestro/target/maestro.jar"
+    dir('maestro') {
+        stash name: 'binary', includes: "target/maestro.jar"
+    }
     dir('maestro/src/main/docker') {
         stash name: 'dockerfile', includes: 'Dockerfile'
     }
