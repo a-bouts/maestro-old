@@ -4,15 +4,17 @@ node {
 
     stage 'Build'
     withJava {
-      sh 'bash mvn install'
+      dir('maestro') {
+        sh 'bash mvn install'
+      }
     }
 
-    dir('target') {
+    dir('maestro/target') {
         archive "maestro.jar"
     }
 
-    stash name: 'binary', includes: "target/maestro.jar"
-    dir('src/main/docker') {
+    stash name: 'binary', includes: "maestro/target/maestro.jar"
+    dir('maestro/src/main/docker') {
         stash name: 'dockerfile', includes: 'Dockerfile'
     }
 }
@@ -28,9 +30,9 @@ node('docker') {
 node('docker') {
     stage 'Publishing Docker Image'
     // requirement: local docker registry available on port 5000
-    docker.withRegistry('http://vps242130.ovh.net:5000', '') {
-        image.push("${env.BRANCH_NAME}")
-    }
+    //docker.withRegistry('http://vps242130.ovh.net:5000', '') {
+    //    image.push("${env.BRANCH_NAME}")
+    //}
 }
 
 
