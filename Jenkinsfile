@@ -3,9 +3,9 @@ node {
     checkout scm
 
     stage 'Build'
-    withJava {
+    withMaven {
       dir('maestro') {
-        sh 'bash mvn install'
+        sh 'mvn clean verify'
       }
     }
 
@@ -38,11 +38,11 @@ node('docker') {
 
 
 // Custom step
-def withJava(def body) {
+def withMaven(def body) {
     def javaHome = tool name: 'jdk-8', type: 'hudson.model.JDK'
-    def maven = tool name: 'maven-3.3.9'
+    def maven = tool 'maven-3.3.9'
 
-    withEnv(["JAVA_HOME=${javaHome}"]) {
+    withEnv(["JAVA_HOME=${javaHome}", "PATH+MAVEN=${maven}/bin"]) {
         body.call()
     }
 }
