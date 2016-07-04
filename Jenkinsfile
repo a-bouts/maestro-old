@@ -40,6 +40,7 @@ node('docker') {
 // Custom step
 def withJava(def body) {
     def javaHome = tool name: 'jdk-8', type: 'hudson.model.JDK'
+    def maven = tool name: 'maven-3.3.9'
 
     withEnv(["JAVA_HOME=${javaHome}"]) {
         body.call()
