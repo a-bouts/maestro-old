@@ -26,7 +26,7 @@ node('docker') {
     unstash 'binary'
 
     stage 'Building Docker Image'
-    image = docker.build("nocloud/maestro:${env.BRANCH_NAME}")
+    image = docker.build("nocloud/maestro:latest")
 }
 
 node('docker') {
