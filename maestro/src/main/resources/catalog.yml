@@ -1,0 +1,14 @@
+applications:
+  - id: traefik
+    name: Traefik
+    description: Reverse Proxy
+    dockerCompose: |
+      services:
+        traefik:
+          image: traefik
+          env_file: ./traefik.env
+          ports:
+            - "80:80"
+            - "8080:8080"
+          volumes:
+            - /var/lib/traefik/traefik.toml:/etc/traefik/traefik.toml
