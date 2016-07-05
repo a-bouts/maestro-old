@@ -22,7 +22,7 @@ node('docker') {
     unstash 'binary'
 
     stage 'Building Docker Image'
-    image = docker.build("nocloud/maestro:develop")
+    image = docker.build("maestro:develop")
 }
 
 node('docker') {
