@@ -9,10 +9,6 @@ node {
       }
     }
 
-    dir('maestro/target') {
-        archive "maestro.jar"
-    }
-
     dir('maestro') {
         stash name: 'binary', includes: "target/maestro.jar"
     }
@@ -26,15 +22,15 @@ node('docker') {
     unstash 'binary'
 
     stage 'Building Docker Image'
-    image = docker.build("nocloud/maestro:latest")
+    image = docker.build("nocloud/maestro:develop")
 }
 
 node('docker') {
     stage 'Publishing Docker Image'
     // requirement: local docker registry available on port 5000
-    //docker.withRegistry('http://vps242130.ovh.net:5000', '') {
-    //    image.push("${env.BRANCH_NAME}")
-    //}
+    docker.withRegistry('https://no-cloud.fr:5000', '') {
+        image.push("develop")
+    }
 }
 
 

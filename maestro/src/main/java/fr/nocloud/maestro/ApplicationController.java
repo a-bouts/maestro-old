@@ -35,17 +35,17 @@ public class ApplicationController {
         applicationService.install(application, parameters);
     }
 
-    @RequestMapping(value = "/{application}/uninstall", method = RequestMethod.GET)
+    @RequestMapping(value = "/{application}/uninstall", method = RequestMethod.POST)
     private void uninstall(@PathVariable String application) {
         applicationService.uninstall(application);
     }
 
-    @RequestMapping(value = "/{application}/start", method = RequestMethod.GET)
+    @RequestMapping(value = "/{application}/start", method = RequestMethod.POST)
     private void start(@PathVariable String application) {
         applicationService.start(application);
     }
 
-    @RequestMapping(value = "/{application}/stop", method = RequestMethod.GET)
+    @RequestMapping(value = "/{application}/stop", method = RequestMethod.POST)
     private void stop(@PathVariable String application) {
         applicationService.stop(application);
     }
