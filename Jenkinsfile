@@ -22,14 +22,14 @@ node('docker') {
     unstash 'binary'
 
     stage 'Building Docker Image'
-    image = docker.build("maestro:develop")
+    image = docker.build("maestro:latest")
 }
 
 node('docker') {
     stage 'Publishing Docker Image'
     // requirement: local docker registry available on port 5000
     docker.withRegistry('https://no-cloud.fr:5000', '') {
-        image.push("develop")
+        image.push("latest")
     }
 }
 
