@@ -1,3 +1,13 @@
 #cloud-config
 ssh_authorized_keys:
   - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDdBIvGS/vLqgYdfEAo1AIAFfGHHgnMjvmxMbqaX3nvJi5yq/IzKaJ9awDGb7XE5RU4eV2xyBb0QXqV1i0INHJo/F5n/IdxJeRVSvkev1SnTi0rPSNwtkm9mKKwfhpgDZNzI6O7REVU8BYdLlJzqeULYx+ivCaKqvlkpkodAqJs5NqIUyO+uWiTdqI0yMKwBdJ0eMTvZK3fEPbFFkSrLT7Lkm8wnbfjfBl6UrzlqrOdIWf+VqLFD/e87v5hOWj3mvgwAngWgzqE9IuiG3uNIC8DSkcoZArRhl2jTdCsR0ZMg1A4nQcmfKub6Py1jIZD0JwzDio/yrwVX9ueNIEE9boJ JuiceSSH
+rancher:
+  services:
+    maestro:
+      image: no-cloud.fr:5000/maestro:latest
+      restart: always
+      ports:
+        - "8080:8080"
+      labels:
+        - io.rancher.os.scope=system
+      
