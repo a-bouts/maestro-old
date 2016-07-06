@@ -6,8 +6,8 @@ rancher:
     maestro:
       image: no-cloud.fr:5000/maestro:latest
       restart: always
+      privileged: true
       ports:
         - "8080:8080"
       labels:
         - io.rancher.os.scope=system
-      
