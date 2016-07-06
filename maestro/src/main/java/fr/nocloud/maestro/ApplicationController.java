@@ -31,7 +31,7 @@ public class ApplicationController {
     }
 
     @RequestMapping(value = "/{application}/install", method = RequestMethod.POST)
-    private void install(@PathVariable String application, @RequestBody Map<String, String> parameters) {
+    private void install(@PathVariable String application, @RequestBody(required = false) Map<String, String> parameters) {
         applicationService.install(application, parameters);
     }
 
