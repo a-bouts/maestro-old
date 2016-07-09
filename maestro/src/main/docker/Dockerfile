@@ -4,7 +4,7 @@ RUN curl -L https://github.com/docker/compose/releases/download/1.6.2/docker-com
 
 VOLUME "/etc/docker"
 #VOLUME "/etc/hosts"
-VOLUME "/etc/resolv.conf"
+#VOLUME "/etc/resolv.conf"
 VOLUME "/etc/selinux"
 VOLUME "/etc/ssl/certs/ca-certificates.crt.rancher"
 VOLUME "/home"
