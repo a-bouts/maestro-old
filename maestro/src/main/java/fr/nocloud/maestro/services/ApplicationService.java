@@ -90,28 +90,28 @@ public class ApplicationService {
 
     private void writeAppEnvFile(Application application, Map<String, String> parameters) {
 
-        if(!CollectionUtils.isEmpty(application.getParameters())) {
-            File envFile = getAppEnvFile(application);
+        File envFile = getAppEnvFile(application);
 
-            try(PrintWriter writer = new PrintWriter(envFile, "UTF-8")) {
+        try(PrintWriter writer = new PrintWriter(envFile, "UTF-8")) {
 
-                for(Parameter parameter : application.getParameters()) {
+            if(!CollectionUtils.isEmpty(application.getParameters())) {
+                for (Parameter parameter : application.getParameters()) {
                     String value = parameters.get(parameter.getName());
 
-                    if(value == null) {
+                    if (value == null) {
                         value = parameter.getDefaultValue();
                     }
 
                     writer.println(parameter.getName() + "=" + value);
                 }
-
-            } catch (FileNotFoundException e) {
-
-                throw new RuntimeException("Unable to create file " + envFile);
-            } catch (UnsupportedEncodingException e) {
-
-                throw new RuntimeException("Unable to encode file using charset UTF-8");
             }
+
+        } catch (FileNotFoundException e) {
+
+            throw new RuntimeException("Unable to create file " + envFile);
+        } catch (UnsupportedEncodingException e) {
+
+            throw new RuntimeException("Unable to encode file using charset UTF-8");
         }
     }
 

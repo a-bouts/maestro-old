@@ -3,6 +3,7 @@ applications:
     name: Traefik
     description: Reverse Proxy
     dockerCompose: |
+      version: '2'
       services:
         traefik:
           image: traefik
