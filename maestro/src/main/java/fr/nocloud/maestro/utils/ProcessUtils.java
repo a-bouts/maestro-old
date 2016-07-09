@@ -25,7 +25,10 @@ public class ProcessUtils {
         String cmd = command + " " + String.join(" ", params);
 
         try {
+            System.out.println("Command Execution : [" + cmd + "]");
+
             Process process = Runtime.getRuntime().exec(cmd);
+            process.waitFor();
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
@@ -38,6 +41,8 @@ public class ProcessUtils {
 
         } catch (IOException e) {
             throw new RuntimeException("Unable to perform on process output stream.", e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException("Unable to perform process execution.", e);
         }
     }
 }
