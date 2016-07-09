@@ -18,7 +18,7 @@ RUN curl -L https://github.com/docker/compose/releases/download/1.6.2/docker-com
 #VOLUME "/sbin/reboot"
 #VOLUME "/sbin/shutdown"
 #VOLUME "/usr/bin/cloud-init"
-VOLUME "/usr/bin/docker"
+#VOLUME "/usr/bin/docker"
 #VOLUME "/usr/bin/docker-containerd"
 #VOLUME "/usr/bin/docker-containerd-shim"
 #VOLUME "/usr/bin/docker-containerd-shim.dist"
