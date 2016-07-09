@@ -37,7 +37,7 @@ public class ProcessUtils {
             return process.exitValue();
 
         } catch (IOException e) {
-            throw new RuntimeException("Unable to perform on process output stream.");
+            throw new RuntimeException("Unable to perform on process output stream.", e);
         }
     }
 }
