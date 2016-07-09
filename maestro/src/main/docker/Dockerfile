@@ -3,7 +3,7 @@ FROM java:8-jre
 RUN curl -L https://github.com/docker/compose/releases/download/1.6.2/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose
 
 #VOLUME "/dev"
-#VOLUME "/etc/docker"
+VOLUME "/etc/docker"
 #VOLUME "/etc/hosts"
 #VOLUME "/etc/resolv.conf"
 #VOLUME "/etc/selinux"
@@ -14,9 +14,9 @@ RUN curl -L https://github.com/docker/compose/releases/download/1.6.2/docker-com
 #VOLUME "/opt"
 #VOLUME "/run"
 VOLUME "/usr/bin/docker"
-#VOLUME "/usr/bin/docker-containerd"
-#VOLUME "/usr/bin/docker-containerd-shim"
-#VOLUME "/usr/bin/docker-runc"
+VOLUME "/usr/bin/docker-containerd"
+VOLUME "/usr/bin/docker-containerd-shim"
+VOLUME "/usr/bin/docker-runc"
 #VOLUME "/usr/bin/ros"
 #VOLUME "/usr/share/ros"
 #VOLUME "/var/lib/docker"
@@ -24,7 +24,7 @@ VOLUME "/usr/bin/docker"
 #VOLUME "/var/lib/rancher/cache"
 #VOLUME "/var/lib/rancher/conf"
 #VOLUME "/var/log"
-#VOLUME "/var/run"
+VOLUME "/var/run"
 
 RUN useradd \
   -d /var/lib/maestro \
