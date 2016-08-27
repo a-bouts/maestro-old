@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends apt-transport-h
 
 
 ENV DOCKER_BUCKET get.docker.com
-ENV DOCKER_VERSION 1.12.1
+ENV DOCKER_VERSION 1.11.2
 ENV DOCKER_SHA256 05ceec7fd937e1416e5dce12b0b6e1c655907d349d52574319a1e875077ccb79
 
 RUN set -x \
