@@ -1,46 +1,27 @@
 FROM java:8-jre
 
-RUN curl -L https://github.com/docker/compose/releases/download/1.6.2/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose
+RUN echo "deb http://http.debian.net/debian jessie-backports main" >> /etc/apt/sources.list.d/backports.list
 
-#VOLUME "/etc/docker"
-#VOLUME "/etc/hosts"
-#VOLUME "/etc/resolv.conf"
-#VOLUME "/etc/selinux"
-#VOLUME "/etc/ssl/certs/ca-certificates.crt.rancher"
-#VOLUME "/home"
-#VOLUME "/host/dev"
-#VOLUME "/lib/firmware"
-#VOLUME "/opt"
-#VOLUME "/lib/modules"
-#VOLUME "/run"
-#VOLUME "/sbin/halt"
-#VOLUME "/sbin/poweroff"
-#VOLUME "/sbin/reboot"
-#VOLUME "/sbin/shutdown"
-#VOLUME "/usr/bin/cloud-init"
-#VOLUME "/usr/bin/docker"
-#VOLUME "/usr/bin/docker-containerd"
-#VOLUME "/usr/bin/docker-containerd-shim"
-#VOLUME "/usr/bin/docker-containerd-shim.dist"
-#VOLUME "/usr/bin/docker-containerd.dist"
-#VOLUME "/usr/bin/docker-runc"
-#VOLUME "/usr/bin/docker-runc.dist"
-#VOLUME "/usr/bin/docker.dist"
-#VOLUME "/usr/bin/dockerlaunch"
-#VOLUME "/usr/bin/respawn"
-#VOLUME "/usr/bin/ros"
-#VOLUME "/usr/bin/switch-console"
-#VOLUME "/usr/bin/system-docker"
-#VOLUME "/usr/bin/user-docker"
-#VOLUME "/usr/sbin/netconf"
-#VOLUME "/usr/sbin/wait-for-docker"
-#VOLUME "/usr/share/ros"
-#VOLUME "/var/lib/docker"
-#VOLUME "/var/lib/rancher"
-#VOLUME "/var/lib/rancher/cache"
-#VOLUME "/var/lib/rancher/conf"
-#VOLUME "/var/log"
-#VOLUME "/var/run"
+RUN apt-get update && apt-get install -y --no-install-recommends apt-transport-https \
+		ca-certificates \
+	&& rm -rf /var/lib/apt/lists/*
+
+
+ENV DOCKER_BUCKET get.docker.com
+ENV DOCKER_VERSION 1.12.1
+ENV DOCKER_SHA256 05ceec7fd937e1416e5dce12b0b6e1c655907d349d52574319a1e875077ccb79
+
+RUN set -x \
+	&& curl -fSL "https://${DOCKER_BUCKET}/builds/Linux/x86_64/docker-${DOCKER_VERSION}.tgz" -o docker.tgz \
+	&& echo "${DOCKER_SHA256} *docker.tgz" | sha256sum -c - \
+	&& tar -xzvf docker.tgz \
+	&& mv docker/* /usr/local/bin/ \
+	&& rmdir docker \
+	&& rm docker.tgz \
+	&& docker -v
+
+RUN curl -L https://github.com/docker/compose/releases/download/1.8.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose \
+	&& chmod +x /usr/local/bin/docker-compose
 
 RUN useradd \
   -d /var/lib/maestro \
@@ -48,7 +29,7 @@ RUN useradd \
   -U \
   maestro
 
-USER maestro
+#USER maestro
 WORKDIR /var/lib/maestro
 
 EXPOSE 8080
