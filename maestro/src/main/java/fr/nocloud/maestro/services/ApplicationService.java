@@ -123,7 +123,7 @@ public class ApplicationService {
             throw new NoSuchElementException();
         }
 
-        stop(application);
+        down(application);
 
         File dockerComposeFile = getAppDockerComposeFile(application);
 
@@ -174,14 +174,14 @@ public class ApplicationService {
 
         exec(application.getStartActions());
 
-        ProcessUtils.exec("docker-compose", "-f", getAppDockerComposeFile(application).getAbsolutePath(), "up");
+        ProcessUtils.exec("docker-compose", "-d", "-f", getAppDockerComposeFile(application).getAbsolutePath(), "up");
     }
 
     private void start(Application application) {
 
         exec(application.getStartActions());
 
-        ProcessUtils.exec("docker-compose", "-f", getAppDockerComposeFile(application).getAbsolutePath(), "start");
+        ProcessUtils.exec("docker-compose", "-d", "-f", getAppDockerComposeFile(application).getAbsolutePath(), "start");
     }
 
     private void stop(Application application) {
@@ -189,6 +189,13 @@ public class ApplicationService {
         exec(application.getStopActions());
 
         ProcessUtils.exec("docker-compose", "-f", getAppDockerComposeFile(application).getAbsolutePath(), "stop");
+    }
+
+    private void down(Application application) {
+
+        exec(application.getStopActions());
+
+        ProcessUtils.exec("docker-compose", "-f", getAppDockerComposeFile(application).getAbsolutePath(), "down");
     }
 
     private void exec(List<Action> actions) {

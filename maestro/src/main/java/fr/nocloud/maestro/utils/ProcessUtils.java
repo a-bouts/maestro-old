@@ -28,7 +28,6 @@ public class ProcessUtils {
             System.out.println("Command Execution : [" + cmd + "]");
 
             Process process = Runtime.getRuntime().exec(cmd);
-            process.waitFor();
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
@@ -36,6 +35,8 @@ public class ProcessUtils {
             while ((s = reader.readLine()) != null) {
                 System.out.println(s);
             }
+
+            process.waitFor();
 
             return process.exitValue();
 
