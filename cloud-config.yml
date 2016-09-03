@@ -5,11 +5,10 @@ rancher:
   services:
     maestro:
       image: no-cloud.fr:5000/maestro:latest
-      restart: always
       volumes:
         - /var/run/docker.sock:/var/run/docker.sock
       labels:
-        - traefik.frontend.rule=PathStrip:/maestro/
+        - traefik.frontend.rule=PathPrefixStrip:/maestro
     traefik:
       image: traefik
       ports:
@@ -18,6 +17,7 @@ rancher:
         - "8080:8080"
       volumes:
         - /var/lib/traefik/traefik.toml:/etc/traefik/traefik.toml
+        - /var/run/docker.sock:/var/run/docker.sock
 write_files:
   - path: /var/lib/traefik/traefik.toml
     permissions: "0755"
@@ -27,6 +27,8 @@ write_files:
       ################################################################
       # Global configuration
       ################################################################
+
+      defaultEntryPoints = ["http"]
 
       [entryPoints]
         [entryPoints.http]
