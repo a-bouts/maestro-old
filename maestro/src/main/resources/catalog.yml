@@ -13,3 +13,23 @@ applications:
             - "8080:8080"
           volumes:
             - /var/lib/traefik/traefik.toml:/etc/traefik/traefik.toml
+  - id: jeedom
+    name: JeeDom
+    description: Serveur Domotique
+    dockerCompose: |
+      jeedom:
+        image: jeedom/jeedom
+        links:
+          - jeedom-mysql
+        volumes:
+          - /dev/ttyUSB0:/dev/ttyUSB0
+          - /var/lib/jeedom/web:/var/www/html
+        privileged: true
+        restart: always
+      jeedom-mysql:
+        image: mysql
+        volumes:
+          - /var/lib/jeedom/bdd:/var/lib/mysql
+        environment:
+          - MYSQL_ROOT_PASSWORD=jeedom
+        restart: always
