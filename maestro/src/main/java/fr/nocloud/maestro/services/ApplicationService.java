@@ -19,6 +19,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -51,6 +54,12 @@ public class ApplicationService {
 
         if(application == null) {
             throw new NoSuchElementException();
+        }
+
+        try {
+            Files.createDirectories(getAppInstallDir(application));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         // définition des paramètres
@@ -91,6 +100,10 @@ public class ApplicationService {
     private void writeAppEnvFile(Application application, Map<String, String> parameters) {
 
         File envFile = getAppEnvFile(application);
+
+        if(!envFile.getParentFile().exists()) {
+            envFile.getParentFile().mkdirs();
+        }
 
         try(PrintWriter writer = new PrintWriter(envFile, "UTF-8")) {
 
@@ -156,32 +169,32 @@ public class ApplicationService {
         stop(application);
     }
 
-    private File getAppInstallDir(Application application) {
-        return new File(appInstallDir, application.getId());
+    private Path getAppInstallDir(Application application) {
+        return Paths.get(appInstallDir, application.getId());
     }
 
     private File getAppDockerComposeFile(Application application) {
 
-        return new File(getAppInstallDir(application), "docker-compose.yml");
+        return getAppInstallDir(application).resolve("docker-compose.yml").toFile();
     }
 
     private File getAppEnvFile(Application application) {
 
-        return new File(getAppInstallDir(application), application.getId() + ".env");
+        return getAppInstallDir(application).resolve(application.getId() + ".env").toFile();
     }
 
     private void up(Application application) {
 
         exec(application.getStartActions());
 
-        ProcessUtils.exec("docker-compose", "-d", "-f", getAppDockerComposeFile(application).getAbsolutePath(), "up");
+        ProcessUtils.exec("docker-compose", "-f", getAppDockerComposeFile(application).getAbsolutePath(), "up");
     }
 
     private void start(Application application) {
 
         exec(application.getStartActions());
 
-        ProcessUtils.exec("docker-compose", "-d", "-f", getAppDockerComposeFile(application).getAbsolutePath(), "start");
+        ProcessUtils.exec("docker-compose", "-f", getAppDockerComposeFile(application).getAbsolutePath(), "start");
     }
 
     private void stop(Application application) {
