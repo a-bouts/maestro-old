@@ -24,6 +24,8 @@ applications:
         volumes:
           - /dev/ttyUSB0:/dev/ttyUSB0
           - /var/lib/jeedom/web:/var/www/html
+        labels:
+          - traefik.frontend.rule=PathPrefixStrip:/jeedom
         privileged: true
         restart: always
       jeedom-mysql:

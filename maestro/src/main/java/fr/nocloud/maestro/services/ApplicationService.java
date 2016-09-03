@@ -57,7 +57,6 @@ public class ApplicationService {
         }
 
         try {
-            System.out.println(getAppInstallDir(application));
             Files.createDirectories(getAppInstallDir(application));
         } catch (IOException e) {
             e.printStackTrace();
@@ -188,7 +187,7 @@ public class ApplicationService {
 
         exec(application.getStartActions());
 
-        ProcessUtils.exec("docker-compose", "-f", getAppDockerComposeFile(application).getAbsolutePath(), "up");
+        ProcessUtils.exec("docker-compose", "-f", getAppDockerComposeFile(application).getAbsolutePath(), "up", "-d");
     }
 
     private void start(Application application) {
