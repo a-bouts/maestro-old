@@ -57,6 +57,7 @@ public class ApplicationService {
         }
 
         try {
+            System.out.println(getAppInstallDir(application));
             Files.createDirectories(getAppInstallDir(application));
         } catch (IOException e) {
             e.printStackTrace();
