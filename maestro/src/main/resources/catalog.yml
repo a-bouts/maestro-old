@@ -36,3 +36,29 @@ applications:
         environment:
           - MYSQL_ROOT_PASSWORD=jeedom
         restart: always
+  - id: nextcloud
+    name: NextCloud
+    description: Serveur NextCloud
+    dockerCompose: |
+      nextcloud:
+        image: wonderfall/nextcloud
+        links:
+          - nextcloud-mysql:db_nextcloud
+        environment:
+          - UID=1000
+          - GID=1000
+        volumes:
+          - /var/lib/nextcloud/data:/data
+          - /var/lib/nextcloud/config:/config
+          - /var/lib/nextcloud/apps:/apps2
+        labels:
+          - traefik.frontend.rule=PathPrefixStrip:/nextcloud
+      nextcloud-mysql:
+        image: mysql
+        volumes:
+          - /var/lib/nextcloud/bdd:/var/lib/mysql
+        environment:
+          - MYSQL_ROOT_PASSWORD=nextcloud
+          - MYSQL_DATABASE=nextcloud
+          - MYSQL_USER=nextcloud
+          - MYSQL_PASSWORD=nextcloud
