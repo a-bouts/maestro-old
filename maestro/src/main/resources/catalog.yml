@@ -25,6 +25,7 @@ applications:
           - /dev/ttyUSB0:/dev/ttyUSB0
           - /var/lib/jeedom/web:/var/www/html
         labels:
+          - traefik.port=80
           - traefik.frontend.rule=PathPrefixStrip:/jeedom
         privileged: true
         restart: always
