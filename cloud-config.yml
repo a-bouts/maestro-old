@@ -6,8 +6,42 @@ rancher:
     maestro:
       image: no-cloud.fr:5000/maestro:latest
       restart: always
-      privileged: true
-      ports:
-        - "8080:8080"
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
       labels:
-        - io.rancher.os.scope=system
+        - traefik.frontend.rule=PathStrip:/maestro/
+    traefik:
+      image: traefik
+      ports:
+        - "80:80"
+        - "443:443"
+        - "8080:8080"
+      volumes:
+        - /var/lib/traefik/traefik.toml:/etc/traefik/traefik.toml
+write_files:
+  - path: /var/lib/traefik/traefik.toml
+    permissions: "0755"
+    owner: root
+    content: |
+      # traefik.toml
+      ################################################################
+      # Global configuration
+      ################################################################
+
+      [entryPoints]
+        [entryPoints.http]
+        address = ":80"
+
+      [web]
+      address = ":8080"
+
+      [file]
+
+      ################################################################
+      # Docker configuration backend
+      ################################################################
+
+      [docker]
+      endpoint = "unix:///var/run/docker.sock"
+      domain = "docker.localhost"
+      watch = true
