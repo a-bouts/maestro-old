@@ -4,6 +4,7 @@ RUN echo "deb http://http.debian.net/debian jessie-backports main" >> /etc/apt/s
 
 RUN apt-get update && apt-get install -y --no-install-recommends apt-transport-https \
 		ca-certificates \
+		iptables \
 	&& rm -rf /var/lib/apt/lists/*
 
 
