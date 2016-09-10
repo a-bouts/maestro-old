@@ -7,6 +7,7 @@ import fr.nocloud.maestro.model.Action;
 import fr.nocloud.maestro.model.Application;
 import fr.nocloud.maestro.model.Applications;
 import fr.nocloud.maestro.model.Parameter;
+import fr.nocloud.maestro.utils.Iptables;
 import fr.nocloud.maestro.utils.ProcessUtils;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -70,6 +71,10 @@ public class ApplicationService {
 
         // commande à l'install
         exec(application.getInstallActions());
+
+        if(application.getIptables() != null) {
+            application.getIptables().stream().forEach(Iptables::accept);
+        }
 
         // démarrage du container
         up(application);
@@ -137,6 +142,10 @@ public class ApplicationService {
         }
 
         down(application);
+
+        if(application.getIptables() != null) {
+            application.getIptables().stream().forEach(Iptables::delete);
+        }
 
         File dockerComposeFile = getAppDockerComposeFile(application);
 

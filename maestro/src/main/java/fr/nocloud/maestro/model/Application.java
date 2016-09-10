@@ -20,6 +20,8 @@ public class Application {
 
     public List<Action> stopActions;
 
+    public List<Iptable> iptables;
+
     public String getId() {
         return id;
     }
@@ -82,5 +84,13 @@ public class Application {
 
     public void setStopActions(List<Action> stopActions) {
         this.stopActions = stopActions;
+    }
+
+    public List<Iptable> getIptables() {
+        return iptables;
+    }
+
+    public void setIptables(List<Iptable> iptables) {
+        this.iptables = iptables;
     }
 }

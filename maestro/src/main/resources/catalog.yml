@@ -43,7 +43,7 @@ applications:
       nextcloud:
         image: wonderfall/nextcloud
         links:
-          - nextcloud-mysql:db_nextcloud
+          - nextcloud-mysql:nextcloud-mysql
         environment:
           - UID=1000
           - GID=1000
@@ -62,3 +62,42 @@ applications:
           - MYSQL_DATABASE=nextcloud
           - MYSQL_USER=nextcloud
           - MYSQL_PASSWORD=nextcloud
+  - id: poste
+    name: Poste.io
+    description: Serveur Mail
+    iptables:
+      - port: 25
+        protocol: tcp
+      - port: 110
+        protocol: tcp
+      - port: 143
+        protocol: tcp
+      - port: 465
+        protocol: tcp
+      - port: 587
+        protocol: tcp
+      - port: 993
+        protocol: tcp
+      - port: 995
+        protocol: tcp
+    dockerCompose: |
+      poste:
+        image: analogic/poste.io
+        volumes:
+          - /var/lib/poste:/data
+          - /etc/localtime:/etc/localtime:ro
+        ports:
+          - "25:25"
+          - "110:110"
+          - "143:143"
+          - "465:465"
+          - "587:587"
+          - "993:993"
+          - "995:995"
+        environment:
+          - HTTPS=OFF
+        labels:
+          - traefik.port=80
+          - traefik.frontend.rule=Host:testmail.no-cloud.fr
+          - traefik.frontend.entryPoints=http,https
+        restart: always
