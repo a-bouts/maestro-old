@@ -3,7 +3,7 @@ package fr.nocloud.maestro;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
-import fr.nocloud.maestro.model.Applications;
+import fr.nocloud.maestro.model.catalog.Applications;
 import fr.nocloud.maestro.services.ApplicationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

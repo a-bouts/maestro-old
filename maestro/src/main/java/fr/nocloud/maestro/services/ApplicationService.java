@@ -3,7 +3,9 @@ package fr.nocloud.maestro.services;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
-import fr.nocloud.maestro.model.*;
+import fr.nocloud.maestro.model.Env;
+import fr.nocloud.maestro.model.Maestro;
+import fr.nocloud.maestro.model.catalog.*;
 import fr.nocloud.maestro.utils.Iptables;
 import fr.nocloud.maestro.utils.ProcessUtils;
 
@@ -35,7 +37,7 @@ public class ApplicationService {
     private String catalogUrl;
 
     @Autowired
-    private Map<String, String> envs;
+    private Maestro config;
 
     @PostConstruct
     public void refresh() {
@@ -175,11 +177,12 @@ public class ApplicationService {
         while(matcher.find()) {
 
             String varName = matcher.group(1);
-            if(!envs.containsKey(varName)) {
+            Env env = config.getEnvs().stream().filter(x -> varName.equals(x.getName())).findFirst().orElse(null);
+            if(env == null) {
                 throw new RuntimeException(String.format("La variable d'environnement '%s' n'est pas définie", varName));
             }
 
-            String val = envs.get(varName);
+            String val = env.getValue();
 
             // On le remplace par la valeur de la variable correspondante
             result = result.replace("${" + varName + "}", val);

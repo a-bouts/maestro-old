@@ -1,4 +1,4 @@
-package fr.nocloud.maestro.model;
+package fr.nocloud.maestro.model.catalog;
 
 /**
  */

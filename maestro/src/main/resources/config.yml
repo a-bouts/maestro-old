@@ -1,0 +1,3 @@
+envs:
+  - name: DOMAIN
+    value: arnaudbouts.fr

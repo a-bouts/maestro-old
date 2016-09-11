@@ -1,6 +1,6 @@
 package fr.nocloud.maestro.utils;
 
-import fr.nocloud.maestro.model.Iptable;
+import fr.nocloud.maestro.model.catalog.Iptable;
 
 /**
  */
