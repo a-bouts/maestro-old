@@ -96,11 +96,56 @@ applications:
           - "587:587"
           - "993:993"
           - "995:995"
-        env_file: .env
+        env_file: poste.env
         environment:
           - HTTPS=OFF
         labels:
           - traefik.port=80
-          - traefik.frontend.rule=Host:$HOST
+          - traefik.frontend.rule=Host:poste.arnaudbouts.fr
           - traefik.frontend.entryPoints=http,https
         restart: always
+    writeFiles:
+      - path: /var/lib/poste/server.ini
+        content: |
+          ;
+          ;      poste.io mailserver configuration
+          ;   YOU MUST RESTART CONTAINER AFTER CHANGE
+          ;
+
+          [server]
+          ; Required settings for mailserver. This hostname have to be unique, it should have proper record in DNS and SSL certificate must cover this host.
+
+          server_hostname = poste.${DOMAIN}
+          bounce_email = postmaster@${DOMAIN}
+          alerts_email = admin@${DOMAIN}
+
+          [relay]
+          ; List of IP addresses which are allowed to send emails trough server without any authentication.
+
+          relay_hosts =
+
+          [spamassassin_inbound]
+          ; All incoming emails will be passed through additional spam filter (spamassassin) with following settings.
+
+          spamassassin_inbound_enabled = 1
+          spamassassin_inbound_block_score = 12
+          spamassassin_inbound_headers_add = 1
+          spamassassin_inbound_change_subject_enabled = 1
+          spamassassin_inbound_change_subject_score = 6
+          spamassassin_inbound_change_subject_prepend = *****SPAM*****
+
+          [spamassassin_outbound]
+          ; If you really don't trust your authenticated users or relayed ip or its critical for you to avoid blacklists you should check (and eventually block) outgoing emails.
+
+          spamassassin_outbound_enabled = 0
+          spamassassin_outbound_block_score = 10
+
+          [lets_encrypt]
+          ; Let's encrypt configured domains
+
+          ; cert_domains =
+
+          [brand]
+          ; As default everywhere is used 'poste.io'
+
+          ; brand_name =

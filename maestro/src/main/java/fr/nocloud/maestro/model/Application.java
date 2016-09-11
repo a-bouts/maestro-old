@@ -4,23 +4,25 @@ import java.util.List;
 
 public class Application {
 
-    public String id;
+    private String id;
 
-    public String name;
+    private String name;
 
-    public String description;
+    private String description;
 
-    public List<Parameter> parameters;
+    private List<Parameter> parameters;
 
-    public String dockerCompose;
+    private String dockerCompose;
 
-    public List<Action> installActions;
+    private List<WriteFile> writeFiles;
 
-    public List<Action> startActions;
+    private List<Action> installActions;
 
-    public List<Action> stopActions;
+    private List<Action> startActions;
 
-    public List<Iptable> iptables;
+    private List<Action> stopActions;
+
+    private List<Iptable> iptables;
 
     public String getId() {
         return id;
@@ -92,5 +94,13 @@ public class Application {
 
     public void setIptables(List<Iptable> iptables) {
         this.iptables = iptables;
+    }
+
+    public List<WriteFile> getWriteFiles() {
+        return writeFiles;
+    }
+
+    public void setWriteFiles(List<WriteFile> writeFiles) {
+        this.writeFiles = writeFiles;
     }
 }

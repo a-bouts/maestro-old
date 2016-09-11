@@ -3,14 +3,12 @@ package fr.nocloud.maestro.services;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
-import fr.nocloud.maestro.model.Action;
-import fr.nocloud.maestro.model.Application;
-import fr.nocloud.maestro.model.Applications;
-import fr.nocloud.maestro.model.Parameter;
+import fr.nocloud.maestro.model.*;
 import fr.nocloud.maestro.utils.Iptables;
 import fr.nocloud.maestro.utils.ProcessUtils;
 
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -19,10 +17,13 @@ import javax.annotation.PostConstruct;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class ApplicationService {
@@ -33,6 +34,8 @@ public class ApplicationService {
     @Value("${catalog.url}")
     private String catalogUrl;
 
+    @Autowired
+    private Map<String, String> envs;
 
     @PostConstruct
     public void refresh() {
@@ -86,6 +89,10 @@ public class ApplicationService {
 
         if(application.getIptables() != null) {
             application.getIptables().stream().forEach(Iptables::accept);
+        }
+
+        if(application.getWriteFiles() != null) {
+            application.getWriteFiles().stream().forEach(this::writeFile);
         }
 
         // démarrage du container
@@ -143,6 +150,42 @@ public class ApplicationService {
 
             throw new RuntimeException("Unable to encode file using charset UTF-8");
         }
+    }
+
+    private void writeFile(WriteFile writeFile) {
+
+        try {
+
+            Files.write(Paths.get(writeFile.getPath()), resolveEnvs(writeFile.getContent()).getBytes(StandardCharsets.UTF_8));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String resolveEnvs(String stringToResolve) {
+
+        String result = stringToResolve;
+
+        // On cherche le pattern ${...}
+
+        Pattern pattern = Pattern.compile("\\$\\{([^\\}]*)\\}");
+        Matcher matcher = pattern.matcher(stringToResolve);
+
+        // Pour chaque ${...} trouvé
+        while(matcher.find()) {
+
+            String varName = matcher.group(1);
+            if(!envs.containsKey(varName)) {
+                throw new RuntimeException(String.format("La variable d'environnement '%s' n'est pas définie", varName));
+            }
+
+            String val = envs.get(varName);
+
+            // On le remplace par la valeur de la variable correspondante
+            result = result.replace("${" + varName + "}", val);
+        }
+
+        return result;
     }
 
     public void uninstall(String applicationId) {
