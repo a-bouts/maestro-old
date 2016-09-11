@@ -65,6 +65,8 @@ applications:
   - id: poste
     name: Poste.io
     description: Serveur Mail
+    parameters:
+      - name: HOST
     iptables:
       - port: 25
         protocol: tcp
@@ -94,10 +96,11 @@ applications:
           - "587:587"
           - "993:993"
           - "995:995"
+        env_file: .env
         environment:
           - HTTPS=OFF
         labels:
           - traefik.port=80
-          - traefik.frontend.rule=Host:testmail.no-cloud.fr
+          - traefik.frontend.rule=Host:$HOST
           - traefik.frontend.entryPoints=http,https
         restart: always
