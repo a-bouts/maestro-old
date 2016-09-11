@@ -158,7 +158,10 @@ public class ApplicationService {
 
         try {
 
-            Files.write(Paths.get(writeFile.getPath()), resolveEnvs(writeFile.getContent()).getBytes(StandardCharsets.UTF_8));
+            Path path = Paths.get(writeFile.getPath());
+            Files.createDirectories(path.getParent());
+
+            Files.write(path, resolveEnvs(writeFile.getContent()).getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
             e.printStackTrace();
         }
