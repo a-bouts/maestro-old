@@ -65,8 +65,6 @@ applications:
   - id: poste
     name: Poste.io
     description: Serveur Mail
-    parameters:
-      - name: HOST
     iptables:
       - port: 25
         protocol: tcp
