@@ -10,19 +10,16 @@ import fr.nocloud.maestro.model.Parameter;
 import fr.nocloud.maestro.utils.Iptables;
 import fr.nocloud.maestro.utils.ProcessUtils;
 
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import javax.annotation.PostConstruct;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.*;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -33,15 +30,30 @@ public class ApplicationService {
     @Value("${app.install.dir}")
     private String appInstallDir;
 
+    @Value("${catalog.url}")
+    private String catalogUrl;
+
+
+    @PostConstruct
+    public void refresh() {
+
+        try(InputStream in = new URL(catalogUrl).openStream();
+                OutputStream out = Files.newOutputStream(Paths.get(appInstallDir).resolve("catalog.yml"), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE)) {
+            IOUtils.copy(in, out);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public Applications getApplications() {
 
         Applications applications = null;
 
-        try {
+        try(InputStream in = Files.newInputStream(Paths.get(appInstallDir).resolve("catalog.yml"))) {
             ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-            InputStream resource = this.getClass().getClassLoader().getResourceAsStream("catalog.yml");
-            applications = mapper.readValue(resource, Applications.class);
+            applications = mapper.readValue(in, Applications.class);
         } catch (IOException e) {
             e.printStackTrace();
         }

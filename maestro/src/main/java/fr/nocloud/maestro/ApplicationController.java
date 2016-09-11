@@ -30,6 +30,11 @@ public class ApplicationController {
         return applicationService.getApplications();
     }
 
+    @RequestMapping(value = "/refresh", method = RequestMethod.POST)
+    private void refresh() {
+        applicationService.refresh();
+    }
+
     @RequestMapping(value = "/{application}/install", method = RequestMethod.POST)
     private void install(@PathVariable String application, @RequestBody(required = false) Map<String, String> parameters) {
         applicationService.install(application, parameters);
