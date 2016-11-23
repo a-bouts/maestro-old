@@ -1,0 +1,36 @@
+version: '2'
+
+services:
+  pyload:
+    image: writl/pyload
+    container_name: pyload
+    networks:
+      - traefik
+    ports:
+      - "7227:7227"
+    volumes_from:
+      - container:media
+    volumes:
+      - ./Downloads:/opt/pyload/Downloads
+      - ./config:/opt/pyload/pyload-config
+    labels:
+      - traefik.port=8000
+      - traefik.frontend.rule=Host:pyload.mydomain
+      - traefik.frontend.passHostHeader=true
+      - traefik.frontend.entryPoints=http,https
+
+  filebot:
+    image: coppit/filebot
+    container_name: filebot
+    volumes_from:
+      - container:media
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - ./filebot/config:/config:rw
+    labels:
+      - traefik.enable=false
+
+networks:
+  traefik:
+    external:
+      name: traefik_default
