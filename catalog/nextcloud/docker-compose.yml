@@ -1,0 +1,67 @@
+version: '2'
+
+services:
+
+  nextcloud:
+    image: wonderfall/nextcloud:10.0
+    container_name: nextcloud
+    restart: always
+    networks:
+      - nextcloud
+      - ldap
+      - traefik
+    links:
+      - db
+    environment:
+      - UPLOAD_MAX_SIZE=10G
+      - APC_SHM_SIZE=128M
+      - OPCACHE_MEM_SIZE=128
+      - CRON_PERIOD=15m
+    volumes_from:
+      - container:media
+    volumes:
+      - nextcloud-data:/data
+      - nextcloud-config:/config
+      - nextcloud-apps:/apps2
+    labels:
+      - traefik.port=8888
+      - traefik.frontend.rule=Host:nextcloud.mydomain
+      - traefik.frontend.passHostHeader=true
+      - traefik.frontend.entryPoints=http,https
+      - traefik.docker.network=traefik_default
+
+  db:
+    image: mariadb:10.1
+    container_name: nextcloud-db
+    restart: always
+    networks:
+      - nextcloud
+    volumes:
+      - nextcloud-db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=asecretpassword
+      - MYSQL_DATABASE=nextcloud
+      - MYSQL_USER=nextcloud
+      - MYSQL_PASSWORD=anothersecretpassword
+    labels:
+      - traefik.enable=false
+
+volumes:
+  nextcloud-config:
+    driver: local
+  nextcloud-apps:
+    driver: local
+  nextcloud-data:
+    driver: local
+  nextcloud-db:
+    driver: local
+
+networks:
+  nextcloud:
+    driver: bridge
+  ldap:
+    external:
+      name: maestro_ldap
+  traefik:
+    external:
+      name: traefik_default
